@@ -129,9 +129,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'coronawarrior/static'),
 ]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'coronawarrior/media')
 MEDIA_URL = '/media/'
 import dj_database_url
 prod_db  =  dj_database_url.config(conn_max_age=500)
