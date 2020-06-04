@@ -1,0 +1,211 @@
+{% extends 'coronakit/basic.html' %}
+{% block body %}
+    <!-- Start All Title Box -->
+    <div class="all-title-box" style="background: turquoise">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Cart</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active">Cart</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End All Title Box -->
+
+    <!-- Start Cart  -->
+    <div class="cart-box-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-main table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Images</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="view-cartall">
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-5">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="coupon-box">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control" placeholder="Enter your coupon code" aria-label="Coupon code" type="text">
+                            <div class="input-group-append">
+                                <button class="btn btn-theme" type="button">Apply Coupon</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+
+                </div>
+            </div>
+
+            <div class="row my-5">
+                <div class="col-lg-8 col-sm-12"></div>
+                <div class="col-lg-4 col-sm-12">
+                    <div class="order-box">
+                        <h3>Order summary</h3>
+                        <div class="d-flex">
+                            <h4>Sub Total</h4>
+                            <div class="ml-auto font-weight-bold " id="totalprice" > $ 130 </div>
+                        </div>
+
+                        <hr class="my-1">
+
+
+                        <div class="d-flex">
+                            <h4>Shipping Cost</h4>
+                            <div class="ml-auto font-weight-bold"> Free </div>
+                        </div>
+                        <hr>
+                        <div class="d-flex gr-total">
+                            <h5>Grand Total</h5>
+                            <div class="ml-auto h5 " id="totalprices" > $ 388 </div>
+                        </div>
+                        <hr> </div>
+                </div>
+                <div class="col-12 d-flex shopping-box"><a href="/checkout/" class="ml-auto btn hvr-hover">Checkout</a> </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- End Cart -->
+
+
+    <!-- End Instagram Feed  -->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCart(cart);
+
+}
+if (localStorage.getItem('details') == null) {
+    var details = {};
+} else {
+    all = JSON.parse(localStorage.getItem('details'));
+    viewcart(all);
+    updateshowcart(all);
+}
+
+if (localStorage.getItem('totalprice') == null) {
+    var totalprice = 0;
+} else {
+    totalprice = JSON.parse(localStorage.getItem('cart'));
+
+}
+
+//Add Popover to cart
+
+
+function updateshowcart(all){
+var z=""
+var i=0
+var sum=0
+
+
+for (var item in all){
+var price=parseInt(all[i][2].slice(3))
+var quantity=parseInt(all[i][1])
+sum=sum+(price*quantity)
+
+var z = z+ "<li>"+
+            "<a href="+"#"+" class="+"photo"+"><img src="+all[i][3]+" class="+"cart-thumb"+" /></a>"+
+            "<h6><a href="+"#"+">"+ all[i][0]+"</a></h6>"+
+            "<p>"+ all[i][1]+"x - <span class="+"price"+">"+all[i][2]+"</span></p>"+
+            "</li>"
+            i=i+1
+    }
+    var ss="btn "
+    z=z+ "<li class="+"total"+">"+
+                            "<a href="+"/cart/"+" class="+ss+" style="+"background:#b0b435"+">"+"VIEW CART</a>"+
+                            "<span class="+"float-right"+"><strong>Total</strong>: "+sum+"</span>"+
+                        "</li>"
+     z=z+"<li class="+"total"+">"+
+                            "<button class="+ss+"onclick="+"clearCart()"+" style="+"background:#b0b435"+">"+"Clear CART</button>"+
+
+                        "</li>"
+    document.getElementById('cart-list').innerHTML=z
+
+
+                        }
+
+
+function updateCart(cart) {
+    var sum = 0;
+    for (var item in cart) {
+    console.log(item)
+        sum = sum + cart[item];
+
+
+      }
+
+    document.getElementById('cart').innerHTML = sum;
+
+    console.log(cart);
+
+}
+
+function viewcart(all){
+var y=""
+var netp=0
+var t=0
+ console.log(all);
+for (var items in all){
+
+var price=parseInt(all[t][2].slice(3))
+var quantity=parseInt(all[t][1])
+totalp=price*quantity
+netp=netp+totalp
+y=y+ '<tr>'+
+                                    '<td class='+'"thumbnail-img"'+'>'+
+                                        '<a href='+'"#"'+'>'+
+									'<img class='+'"img-fluid"'+' src='+'"'+all[t][3]+'"'+' />'+
+								'</a>'+
+                                    '</td>'+
+                                    '<td class='+'"name-pr"'+'>'+
+                                        '<a href='+'"#"'+'>'+
+									all[t][0]+
+								'</a>'+
+                                    '</td>'+
+                                    '<td class='+'"price-pr"'+'>'+
+                                        '<p>'+all[t][2]+'</p>'+
+                                    '</td>'+
+                                    '<td class='+'"quantity-box"'+'><p>'+all[t][1]+'</p></td>'+
+                                    '<td class='+'"total-pr"'+'>'+
+                                        '<p>'+totalp+'</p>'
+                                    '</td>'+
+
+                                '</tr>'
+                                t=t+1;}
+                                document.getElementById('view-cartall').innerHTML=y
+                                document.getElementById('totalprice').innerHTML='Rs.'+netp;
+                                document.getElementById('totalprices').innerHTML='Rs.'+netp;
+
+                                }
+
+
+</script>
+
+{% endblock %}

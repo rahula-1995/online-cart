@@ -1,0 +1,205 @@
+{% extends 'coronakit/basic.html' %}
+{% block body %}
+
+    <!-- Start All Title Box -->
+    <div class="all-title-box" style="background: turquoise">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Shop Detail</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active">Shop Detail </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End All Title Box -->
+
+    <!-- Start Shop Detail  -->
+    <div class="shop-detail-box-main">
+        {% for product in product %}
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5 col-lg-5 col-md-6">
+                    <div id="carousel-example-1" class="single-product-slider carousel slide" data-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
+                            <div class="carousel-item active"> <img class="d-block w-100" id="imagepr{{product.product_id}}" src="/media/{{product.image}}" alt="First slide"> </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-xl-7 col-lg-7 col-md-6">
+                    <div class="single-product-details">
+                        <h2 id="namepr{{product.product_id}}">{{product.product_name}}</h2>
+                        <h5 id="pricepr{{product.product_id}}">Rs.{{product.price}}</h5>
+                        <p class="available-stock"><span> More than 20 available / <a href="#">8 sold </a></span><p>
+						<h4>Short Description:</h4>
+						<p>{{product.desc}}</p>
+						<ul>
+							<li>
+								<div class="form-group quantity-box">
+
+								</div>
+							</li>
+						</ul>
+
+						<div class="price-box-bar">
+							<div class="cart-and-bay-btn cart">
+                                <button class="cart" id="pr{{product.product_id}}" style="position:absolute;background:#b0b435;bottom:0;
+                                left:0px;padding: 10px 20px;font-weight: 700;color: #ffffff;" >Add to Cart</button>
+
+
+							</div>
+						</div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    <br>
+        {% endfor %}
+
+
+    </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCart(cart);
+
+
+}
+// If the add to cart button is clicked, add/increment the item
+//$('.cart').click(function() {
+    $('.cart').on('click', 'button.cart', function(){
+    var idstr = this.id.toString();
+    if (cart[idstr] != undefined) {
+        cart[idstr] = cart[idstr] + 1;
+    } else {
+        cart[idstr] = 1;
+    }
+
+    updateCart(cart);
+
+
+
+});
+//Add Popover to cart
+
+updatePopover(cart);
+function updatePopover(cart) {
+    console.log('We are inside updatePopover');
+    var popStr = "";
+    var i=1;
+    all=[];
+    for (var item in cart) {
+
+        newa=[];
+        popStr =document.getElementById('name' + item).innerHTML
+        Qty=cart[item];
+        price=document.getElementById('price' + item).innerHTML
+        image=document.getElementById("image"+item).src
+
+        i=i+1;
+        newa=[popStr,Qty,price,image];
+
+
+        all.push(newa);
+        console.log(all)
+
+
+    }
+    localStorage.setItem('details', JSON.stringify(all));
+    updateshowcart(all);
+
+
+}
+function updateshowcart(all){
+var z=""
+var i=0
+var sum=0
+
+
+for (var item in all){
+var price=parseInt(all[i][2].slice(3))
+var quantity=parseInt(all[i][1])
+sum=sum+(price*quantity)
+
+var z = z+ "<li>"+
+            "<a href="+"#"+" class="+"photo"+"><img src="+all[i][3]+" class="+"cart-thumb"+" /></a>"+
+            "<h6><a href="+"#"+">"+ all[i][0]+"</a></h6>"+
+            "<p>"+ all[i][1]+"x - <span class="+"price"+">"+all[i][2]+"</span></p>"+
+            "</li>"
+            i=i+1
+    }
+    var ss="btn "
+    z=z+ "<li class="+"total"+">"+
+                            "<a href="+"/cart/"+" class="+ss+" style="+"background:#b0b435"+">"+"VIEW CART</a>"+
+                            "<span class="+"float-right"+"><strong>Total</strong>: "+sum+"</span>"+
+                        "</li>"
+     z=z+"<li class="+"total"+">"+
+                            "<button class="+ss+"onclick="+"clearCart()"+" style="+"background:#b0b435"+">"+"Clear CART</button>"+
+
+                        "</li>"
+    document.getElementById('cart-list').innerHTML=z
+    localStorage.setItem('totalprice', JSON.stringify(sum));
+
+                        }
+
+function clearCart() {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    for (var item in cart) {
+        document.getElementById(item).innerHTML = '<button id="' + item + '" class="btn btn-primary cart">Add To Cart</button>'
+    }
+    localStorage.clear();
+    cart = {};
+    updateCart(cart);
+}
+function updateCart(cart) {
+    var sum = 0;
+    for (var item in cart) {
+    console.log(item)
+        sum = sum + cart[item];
+        document.getElementById(item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" +
+        item + "''>" + cart[item] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'> + </button>";
+
+      }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = sum;
+    updatePopover(cart);
+    console.log(cart);
+
+}
+// If plus or minus button is clicked, change the cart as well as the display value
+$('.cart').on("click", "button.minus", function() {
+    a = this.id.slice(7, );
+    console.log(a)
+    cart['pr' + a] = cart['pr' + a] - 1;
+    cart['pr' + a] = Math.max(0, cart['pr' + a]);
+    document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+    updateCart(cart);
+
+});
+$('.cart').on("click", "button.plus", function() {
+    a = this.id.slice(6, );
+    cart['pr' + a] = cart['pr' + a] + 1;
+    document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+    updateCart(cart);
+
+});
+
+
+
+</script>
+
+
+
+{% endblock %}

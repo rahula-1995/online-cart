@@ -1,0 +1,259 @@
+{% extends 'coronakit/basic.html' %}
+{% block body %}
+    <!-- Start All Title Box -->
+    <div class="all-title-box" style="background: turquoise">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Checkout</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active">Checkout</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End All Title Box -->
+
+    <!-- Start Cart  -->
+    <div class="cart-box-main">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="checkout-address">
+                        <div class="title-left">
+                            <h3>Billing address</h3>
+                        </div>
+                        <form class="needs-validation" method="post" id="mycheckForm" action="/checkout/">{% csrf_token %}
+                             <input type="hidden" name="itemsJson" id="itemsJson">
+                            <input type="hidden" name="grandtotal" id="grandtotal">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName">Name *</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="" required>
+                                    <div class="invalid-feedback"> Valid first name is required. </div>
+                                </div>
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="">
+                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone">Phone Number *</label>
+                                <input type="number" class="form-control" id="phone" name="phone" placeholder="">
+                                <div class="invalid-feedback"> Please enter a valid phone number. </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address">Address *</label>
+                                <input type="text" class="form-control" id="address" name="address" placeholder="" required>
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address2">Address 2 *</label>
+                                <input type="text" class="form-control" id="address2" name="address2" placeholder=""> </div>
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <label for="state"> State*</label>
+                                    <select class="wide w-100" id="state" name="state">
+									<option value="Choose..." data-display="Select">Choose...</option>
+									<option value="Bihar">Bihar</option>
+								</select>
+                                    <div class="invalid-feedback"> Please select a valid country. </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="city">city *</label>
+                                    <select class="wide w-100" id="city" name="city">
+									<option data-display="Select">Choose...</option>
+									<option>Gaya</option>
+								</select>
+                                    <div class="invalid-feedback"> Please provide a valid state. </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="zip">Zip *</label>
+                                    <input type="text" class="form-control" id="zip" name="zip" placeholder="" required>
+                                    <div class="invalid-feedback"> Zip code required. </div>
+                                </div>
+                            </div>
+                            <hr class="mb-4">
+
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="row">
+
+                        <div class="col-md-12 col-lg-12">
+                            <div class="odr-box">
+                                <div class="title-left">
+                                    <h3>Shopping cart</h3>
+                                </div>
+                                <div class="rounded p-2 bg-light" id="checkout-cart">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="order-box">
+                                <div class="title-left">
+                                    <h3>Your order</h3>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="font-weight-bold">Product</div>
+                                    <div class="ml-auto font-weight-bold">Total</div>
+                                </div>
+                                <hr class="my-1">
+                                <div class="d-flex">
+                                    <h4>Sub Total</h4>
+                                    <div class="ml-auto font-weight-bold" id="totalprice"> $ 440 </div>
+                                </div>
+
+                                <hr class="my-1">
+
+
+                                <div class="d-flex">
+                                    <h4>Shipping Cost</h4>
+                                    <div class="ml-auto font-weight-bold"> Free </div>
+                                </div>
+                                <hr>
+                                <div class="d-flex gr-total">
+                                    <h5>Grand Total</h5>
+                                    <div class="ml-auto h5" id="totalprices"> $ 388 </div>
+                                </div>
+                                <hr> </div>
+                        </div>
+                            <div class="col-12 d-flex shopping-box">
+                                <button type="submit" class="ml-auto btn " id="myButton"   style="background-color: #b0b435;">Place Order</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- End Cart -->
+
+
+    <!-- End Instagram Feed  -->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCart(cart);
+
+}
+if (localStorage.getItem('details') == null) {
+    var details = {};
+} else {
+    all = JSON.parse(localStorage.getItem('details'));
+    viewcart(all);
+    updateshowcart(all);
+}
+
+if (localStorage.getItem('totalprice') == null) {
+    var totalprice = 0;
+} else {
+    totalprice = JSON.parse(localStorage.getItem('cart'));
+
+}
+if (localStorage.getItem('orders') == null) {
+    var orders = {};
+} else {
+    orders = JSON.parse(localStorage.getItem('orders'));
+
+}
+
+//Add Popover to cart
+
+
+function updateshowcart(all){
+var z=""
+var i=0
+var sum=0
+
+
+for (var item in all){
+var price=parseInt(all[i][2].slice(3))
+var quantity=parseInt(all[i][1])
+sum=sum+(price*quantity)
+
+var z = z+ "<li>"+
+            "<a href="+"#"+" class="+"photo"+"><img src="+all[i][3]+" class="+"cart-thumb"+" /></a>"+
+            "<h6><a href="+"#"+">"+ all[i][0]+"</a></h6>"+
+            "<p>"+ all[i][1]+"x - <span class="+"price"+">"+all[i][2]+"</span></p>"+
+            "</li>"
+            i=i+1
+    }
+    var ss="btn "
+    z=z+ "<li class="+"total"+">"+
+                            "<a href="+"/cart/"+" class="+ss+" style="+"background:#b0b435"+">"+"VIEW CART</a>"+
+                            "<span class="+"float-right"+"><strong>Total</strong>: "+sum+"</span>"+
+                        "</li>"
+     z=z+"<li class="+"total"+">"+
+                            "<button class="+ss+"onclick="+"clearCart()"+" style="+"background:#b0b435"+">"+"Clear CART</button>"+
+
+                        "</li>"
+    document.getElementById('cart-list').innerHTML=z
+
+
+                        }
+
+
+function updateCart(cart) {
+    var sum = 0;
+    for (var item in cart) {
+    console.log(item)
+        sum = sum + cart[item];
+
+
+      }
+
+    document.getElementById('cart').innerHTML = sum;
+
+    console.log(cart);
+
+}
+
+function viewcart(all){
+var y=""
+var netp=0
+var t=0
+ console.log(all);
+for (var items in all){
+
+var price=parseInt(all[t][2].slice(3))
+var quantity=parseInt(all[t][1])
+totalp=price*quantity
+netp=netp+totalp
+y=y+ '<div class='+'"media mb-2 border-bottom"'+'>'+
+                                        '<div class='+'"media-body"'+'><a href='+'"#"'+'> '+all[t][0]+'</a>'+
+                                            '<div class='+'"small text-muted"'+'>Price: '+all[t][2]+'<span class='+'"mx-2"'+'>|</span> Qty: '+all[t][1]+' <span class='+'"mx-2"'+'>|</span> Subtotal: Rs.'+totalp+'</div>'+
+                                        '</div>'+
+                                    '</div>'
+                                t=t+1;}
+                                document.getElementById('checkout-cart').innerHTML=y
+                                document.getElementById('totalprice').innerHTML='Rs.'+netp;
+                                document.getElementById('totalprices').innerHTML='Rs.'+netp;
+                                $('#grandtotal').val(JSON.stringify(netp));
+
+                                }
+                                $('#itemsJson').val(JSON.stringify(orders));
+
+
+  $("#myButton").click(function () {
+    $("#mycheckForm").submit();
+
+  });
+
+
+
+</script>
+
+{% endblock %}

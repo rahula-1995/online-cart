@@ -1,0 +1,239 @@
+{% extends 'coronakit/basic.html' %}
+{% block body %}
+    <!-- Start Slider -->
+    <div id="slides-shop" class="cover-slides">
+        <ul class="slides-container">
+            <li class="text-center">
+
+                <img src="/media/images/2.jpg" style="width:100%" alt="">
+
+            </li>
+            <li class="text-center">
+                <img src="/media/images/3.jpg"  alt="">
+
+            </li>
+            <li class="text-center">
+                <img src="/media/images/4.jpg" style="width:100%" alt="">
+
+            </li>
+        </ul>
+        <div class="slides-navigation">
+            <a href="#" class="next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+            <a href="#" class="prev"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+        </div>
+    </div>
+    <!-- End Slider -->
+
+    <!-- Start Categories  -->
+
+    <!-- End Categories -->
+	
+
+
+    <!-- Start Products  -->
+    <div class="products-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="title-all text-center">
+                        <h1>Top corona prevention product</h1>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row special-list">
+                {% for product in product %}
+                <div class="col-lg-3 col-md-6 special-grid best-seller">
+                    <div class="products-single fix">
+                        <div class="box-img-hover">
+                            <div class="type-lb">
+                                <p class="sale">Sale</p>
+                            </div>
+                            <img src="/media/{{product.image}}" class="img-fluid" style="
+    height: 220px;
+" id="imagepr{{product.product_id}}" alt="Image">
+                            <div class="mask-icon cart">
+                                <ul>
+                                    <li><a href="/detailed/" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+
+                                </ul>
+
+                                <button class="cart" id="pr{{product.product_id}}" style="position:absolute;background:#b0b435;bottom:0;
+                                left:0px;padding: 10px 20px;font-weight: 700;color: #ffffff;" >Add to Cart</button>
+
+                            </div>
+                        </div>
+                        <div class="why-text">
+                            <h4 id="namepr{{product.product_id}}">{{product.product_name}}</h4>
+                            <h5 id="pricepr{{product.product_id}}">Rs.{{product.price}}</h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCart(cart);
+}
+
+// If the add to cart button is clicked, add/increment the item
+//$('.cart').click(function() {
+    $('.cart').on('click', 'button.cart', function(){
+    var idstr = this.id.toString();
+    if (cart[idstr] != undefined) {
+        cart[idstr] = cart[idstr] + 1;
+    } else {
+        cart[idstr] = 1;
+    }
+
+    updateCart(cart);
+
+
+
+});
+//Add Popover to cart
+
+updatePopover(cart);
+function updatePopover(cart) {
+    console.log('We are inside updatePopover');
+    var popStr = "";
+    var i=1;
+    all=[];
+    order=[];
+    var suma=0;
+    for (var item in cart) {
+
+        newa=[];
+        popStr =document.getElementById('name' + item).innerHTML
+        Qty=cart[item];
+        price=document.getElementById('price' + item).innerHTML
+        image=document.getElementById("image"+item).src
+        var price1=parseInt(price.slice(3))
+        var quantity=parseInt(Qty)
+        totalpq=price1*quantity
+        suma=suma+totalpq
+
+        i=i+1;
+        newa=[popStr,Qty,price,image];
+        newo=[popStr,Qty,price,totalpq]
+
+
+        all.push(newa);
+        order.push(newo);
+        console.log(all)
+
+
+    }
+    order.push(suma);
+    localStorage.setItem('details', JSON.stringify(all));
+    localStorage.setItem('orders', JSON.stringify(order));
+    updateshowcart(all);
+
+
+}
+function updateshowcart(all){
+var z=""
+var i=0
+var sum=0
+
+
+for (var item in all){
+var price=parseInt(all[i][2].slice(3))
+var quantity=parseInt(all[i][1])
+sum=sum+(price*quantity)
+
+var z = z+ "<li>"+
+            "<a href="+"#"+" class="+"photo"+"><img src="+all[i][3]+" class="+"cart-thumb"+" /></a>"+
+            "<h6><a href="+"#"+">"+ all[i][0]+"</a></h6>"+
+            "<p>"+ all[i][1]+"x - <span class="+"price"+">"+all[i][2]+"</span></p>"+
+            "</li>"
+            i=i+1
+    }
+    var ss="btn "
+    z=z+ "<li class="+"total"+">"+
+                            "<a href="+"/cart/"+" class="+ss+" style="+"background:#b0b435"+">"+"VIEW CART</a>"+
+                            "<span class="+"float-right"+"><strong>Total</strong>: "+sum+"</span>"+
+                        "</li>"
+     z=z+"<li class="+"total"+">"+
+                            "<button class="+ss+"onclick="+"clearCart()"+" style="+"background:#b0b435"+">"+"Clear CART</button>"+
+
+                        "</li>"
+    document.getElementById('cart-list').innerHTML=z
+    localStorage.setItem('totalprice', JSON.stringify(sum));
+
+                        }
+
+function clearCart() {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    for (var item in cart) {
+        document.getElementById(item).innerHTML = '<button id="' + item + '" class="btn btn-primary cart">Add To Cart</button>'
+    }
+    localStorage.clear();
+    cart = {};
+    updateCart(cart);
+}
+function updateCart(cart) {
+    var sum = 0;
+    for (var item in cart) {
+    console.log(item)
+        sum = sum + cart[item];
+        document.getElementById(item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" +
+        item + "''>" + cart[item] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'> + </button>";
+
+      }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = sum;
+    updatePopover(cart);
+    console.log(cart);
+
+}
+// If plus or minus button is clicked, change the cart as well as the display value
+$('.cart').on("click", "button.minus", function() {
+    a = this.id.slice(7, );
+    console.log(a)
+    cart['pr' + a] = cart['pr' + a] - 1;
+    cart['pr' + a] = Math.max(0, cart['pr' + a]);
+    document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+    updateCart(cart);
+
+});
+$('.cart').on("click", "button.plus", function() {
+    a = this.id.slice(6, );
+    cart['pr' + a] = cart['pr' + a] + 1;
+    document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+    updateCart(cart);
+
+});
+
+
+
+</script>
+    <!-- End Products  -->
+
+
+    <!-- End Blog  -->
+
+
+    <!-- Start Instagram Feed  -->
+
+    <!-- End Instagram Feed  -->
+
+{% endblock %}
