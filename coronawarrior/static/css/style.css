@@ -1535,7 +1535,7 @@ button {
 }
 /*------------------------------------------------------------------ All Pages -------------------------------------------------------------------*/
  .all-title-box{
-     background: url("..media/images/coro.jpg") no-repeat center center;
+     background: url("../images/coro.jpg") no-repeat center center;
      -webkit-background-size: cover;
      -moz-background-size: cover;
      -ms-background-size: cover;
